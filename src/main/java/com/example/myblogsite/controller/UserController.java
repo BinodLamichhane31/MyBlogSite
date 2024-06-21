@@ -3,6 +3,7 @@ package com.example.myblogsite.controller;
 import com.example.myblogsite.pojo.UserPojo;
 import com.example.myblogsite.service.UserService;
 import com.example.myblogsite.shared.pojo.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class UserController {
     private  UserService userService;
 
     @PostMapping("/")
-    public ResponseEntity<UserPojo> createUser(@RequestBody UserPojo userPojo){
+    public ResponseEntity<UserPojo> createUser(@Valid @RequestBody UserPojo userPojo){
         UserPojo createdUserPojo = this.userService.createUser(userPojo);
         return new ResponseEntity<>(createdUserPojo, HttpStatus.OK);
     }
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserPojo> updateUser(@RequestBody UserPojo userPojo,@PathVariable Long userId){
+    public ResponseEntity<UserPojo> updateUser(@Valid @RequestBody UserPojo userPojo,@PathVariable Long userId){
         UserPojo updatedUserPojo = this.userService.updateUser(userPojo,userId);
         return ResponseEntity.ok(updatedUserPojo);
     }
