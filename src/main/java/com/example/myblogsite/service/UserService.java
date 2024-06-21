@@ -1,6 +1,7 @@
 package com.example.myblogsite.service;
 
 import com.example.myblogsite.pojo.UserPojo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

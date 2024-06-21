@@ -6,11 +6,15 @@ import com.example.myblogsite.pojo.UserPojo;
 import com.example.myblogsite.exception.ResourceNotFoundException;
 import com.example.myblogsite.repository.UserRepository;
 import com.example.myblogsite.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class UserServiceImpl implements UserService {
+    @Autowired
     private UserRepository userRepository;
     @Override
     public UserPojo createUser(UserPojo userPojo) {
