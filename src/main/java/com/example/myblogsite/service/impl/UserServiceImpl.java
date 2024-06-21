@@ -6,6 +6,7 @@ import com.example.myblogsite.pojo.UserPojo;
 import com.example.myblogsite.exception.ResourceNotFoundException;
 import com.example.myblogsite.repository.UserRepository;
 import com.example.myblogsite.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
     @Override
     public UserPojo createUser(UserPojo userPojo) {
         User user = this.userPojoToUser(userPojo);
@@ -60,23 +64,23 @@ public class UserServiceImpl implements UserService {
     }
 
     public User userPojoToUser(UserPojo userPojo) {
-        User user = new User();
-        user.setId(userPojo.getId());
-        user.setName(userPojo.getName());
-        user.setEmail(userPojo.getEmail());
-        user.setPassword(userPojo.getPassword());
-        user.setAbout(userPojo.getAbout());
+        User user = this.modelMapper.map(userPojo, User.class);
+//        user.setId(userPojo.getId());
+//        user.setName(userPojo.getName());
+//        user.setEmail(userPojo.getEmail());
+//        user.setPassword(userPojo.getPassword());
+//        user.setAbout(userPojo.getAbout());
         return user;
 
     }
 
     public UserPojo userToUserPojo(User user) {
-        UserPojo userPojo = new UserPojo();
-        userPojo.setId(user.getId());
-        userPojo.setName(user.getName());
-        userPojo.setEmail(user.getEmail());
-        userPojo.setPassword(user.getPassword());
-        userPojo.setAbout(user.getAbout());
+        UserPojo userPojo = this.modelMapper.map(user, UserPojo.class);
+//        userPojo.setId(user.getId());
+//        userPojo.setName(user.getName());
+//        userPojo.setEmail(user.getEmail());
+//        userPojo.setPassword(user.getPassword());
+//        userPojo.setAbout(user.getAbout());
         return userPojo;
     }
 }
