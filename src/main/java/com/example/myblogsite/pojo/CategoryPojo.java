@@ -14,7 +14,7 @@ import lombok.Setter;
 
 public class CategoryPojo {
 
-    private Long id;
+    private Long categoryId;
     @NotBlank
     @Size(min = 3,max = 12,message = "The minimum size of the title is 3 and maximum is 12")
     private String categoryTitle;
