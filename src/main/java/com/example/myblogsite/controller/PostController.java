@@ -47,6 +47,15 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/postsPage")
+    public ResponseEntity<List<PostPojo>> getPostsInPage(
+            @RequestParam(value = "pageNumber",defaultValue = "1",required = false) Integer pageNumber,
+            @RequestParam (value = "pageSize", defaultValue = "5",required = false) Integer pageSize) {
+        List<PostPojo> posts = this.postService.getPostsInPage(pageNumber,pageSize);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+
+    }
+
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostPojo> getPostById(@PathVariable Long postId) {
         PostPojo post = this.postService.getPostById(postId);
