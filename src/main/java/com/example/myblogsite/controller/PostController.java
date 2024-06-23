@@ -41,15 +41,10 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @GetMapping("/posts")
-    public ResponseEntity<List<PostPojo>> getAllPosts() {
-        List<PostPojo> posts = this.postService.getAllPosts();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
-    }
 
-    @GetMapping("/postsPage")
-    public ResponseEntity<List<PostPojo>> getPostsInPage(
-            @RequestParam(value = "pageNumber",defaultValue = "1",required = false) Integer pageNumber,
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostPojo>> getAllPosts(
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
             @RequestParam (value = "pageSize", defaultValue = "5",required = false) Integer pageSize) {
         List<PostPojo> posts = this.postService.getPostsInPage(pageNumber,pageSize);
         return new ResponseEntity<>(posts, HttpStatus.OK);
