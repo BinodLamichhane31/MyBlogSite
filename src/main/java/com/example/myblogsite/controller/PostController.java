@@ -4,6 +4,7 @@ import com.example.myblogsite.entity.Post;
 import com.example.myblogsite.pojo.PostPojo;
 import com.example.myblogsite.service.PostService;
 import com.example.myblogsite.shared.pojo.ApiResponse;
+import com.example.myblogsite.shared.pojo.PostResponse;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,24 +31,33 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}/posts")
-    public ResponseEntity<List<PostPojo>> getPostsByUser(@PathVariable Long userId) {
-        List<PostPojo> posts = this.postService.getPostsByUser(userId);
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+    public ResponseEntity<PostResponse> getPostsByUser(@PathVariable Long userId,
+                                                         @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
+                                                         @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize) {
+        PostResponse postResponse = this.postService.getPostsByUser(userId,pageNumber,pageSize);
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
     @GetMapping("/category/{categoryId}/posts")
-    public ResponseEntity<List<PostPojo>> getPostsByCategory(@PathVariable Long categoryId) {
-        List<PostPojo> posts = this.postService.getPostsByCategory(categoryId);
+    public ResponseEntity<PostResponse> getPostsByCategory(@PathVariable Long categoryId,
+                                                             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
+                                                             @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize) {
+        PostResponse postResponse = this.postService.getPostsByCategory(categoryId, pageNumber, pageSize);
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostPojo>> getAllPosts() {
+        List<PostPojo> posts = this.postService.getAllPosts();
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-
-    @GetMapping("/posts")
-    public ResponseEntity<List<PostPojo>> getAllPosts(
+    @GetMapping("/postsInPage")
+    public ResponseEntity<PostResponse> getAllPostsInPage(
             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-            @RequestParam (value = "pageSize", defaultValue = "5",required = false) Integer pageSize) {
-        List<PostPojo> posts = this.postService.getPostsInPage(pageNumber,pageSize);
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+            @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize) {
+        PostResponse postResponse = this.postService.getPostsInPage(pageNumber,pageSize);
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
 
     }
 

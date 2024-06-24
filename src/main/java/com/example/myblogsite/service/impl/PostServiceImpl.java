@@ -9,6 +9,7 @@ import com.example.myblogsite.repository.CategoryRepository;
 import com.example.myblogsite.repository.PostRepository;
 import com.example.myblogsite.repository.UserRepository;
 import com.example.myblogsite.service.PostService;
+import com.example.myblogsite.shared.pojo.PostResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -84,20 +85,36 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostPojo> getPostsByCategory(Long categoryId) {
+    public PostResponse getPostsByCategory(Long categoryId,Integer pageNum, Integer pageSize) {
         Category category = this.categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new ResourceNotFoundException("Category ", "category id ", categoryId));
-        List<Post> posts= this.postRepository.findByCategory(category);
-        return posts.stream().map((post) -> this.modelMapper.map(post, PostPojo.class)).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Post> postsPage = this.postRepository.findByCategory(category,pageable);
+        List<Post> posts= postsPage.getContent();
+        List<PostPojo> postPojos= posts.stream().map((post) -> this.modelMapper.map(post, PostPojo.class)).collect(Collectors.toList());
+        return getPostResponse(postsPage, postPojos);
     }
 
     @Override
-    public List<PostPojo> getPostsByUser(Long userId) {
+    public PostResponse getPostsByUser(Long userId,Integer pageNum, Integer pageSize) {
         User user = this.userRepository.findById(userId)
                 .orElseThrow(()->new ResourceNotFoundException("User","user id",userId));
-        List<Post> posts= this.postRepository.findByUser(user);
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Post> postsPage = this.postRepository.findByUser(user,pageable);
+        List<Post> posts= postsPage.getContent();
+        List<PostPojo> postPojos= posts.stream().map((post) -> this.modelMapper.map(post, PostPojo.class)).collect(Collectors.toList());
+        return getPostResponse(postsPage, postPojos);
+    }
 
-        return posts.stream().map((post) -> this.modelMapper.map(post, PostPojo.class)).collect(Collectors.toList());
+    private PostResponse getPostResponse(Page<Post> postsPage, List<PostPojo> postPojos) {
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postPojos);
+        postResponse.setPageNumber(postsPage.getNumber());
+        postResponse.setPageSize(postsPage.getSize());
+        postResponse.setTotalElements(postsPage.getTotalElements());
+        postResponse.setTotalPages(postsPage.getTotalPages());
+        postResponse.setLast(postsPage.isLast());
+        return postResponse;
     }
 
     @Override
@@ -106,10 +123,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostPojo> getPostsInPage(Integer pageNum, Integer size) {
+    public PostResponse getPostsInPage(Integer pageNum, Integer size) {
         Pageable p = PageRequest.of(pageNum, size);
         Page<Post> postsPage = this.postRepository.findAll(p);
         List<Post> posts = postsPage.getContent();
-        return posts.stream().map(post -> this.modelMapper.map(post,PostPojo.class)).collect(Collectors.toList());
+        List<PostPojo> postPojos= posts.stream().map(post -> this.modelMapper.map(post,PostPojo.class)).collect(Collectors.toList());
+
+        return getPostResponse(postsPage, postPojos);
     }
 }

@@ -2,6 +2,7 @@ package com.example.myblogsite.service;
 
 import com.example.myblogsite.entity.Post;
 import com.example.myblogsite.pojo.PostPojo;
+import com.example.myblogsite.shared.pojo.PostResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,9 +14,9 @@ public interface PostService {
     void deletePost(Long postId);
     PostPojo getPostById(Long postId);
     List<PostPojo> getAllPosts();
-    List<PostPojo> getPostsByCategory(Long categoryId);
-    List<PostPojo> getPostsByUser(Long userId);
+    PostResponse getPostsByCategory(Long categoryId,Integer pageNum, Integer pageSize);
+    PostResponse getPostsByUser(Long userId,Integer pageNum, Integer pageSize);
     List<PostPojo> searchPosts(String keyword);
-    List<PostPojo> getPostsInPage(Integer pageNum, Integer pageSize);
+    PostResponse getPostsInPage(Integer pageNum, Integer pageSize);
 
 }
