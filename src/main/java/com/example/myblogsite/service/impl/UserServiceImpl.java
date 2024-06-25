@@ -3,7 +3,6 @@ package com.example.myblogsite.service.impl;
 import com.example.myblogsite.entity.User;
 import com.example.myblogsite.exception.ResourceNotFoundException;
 import com.example.myblogsite.pojo.UserPojo;
-import com.example.myblogsite.exception.ResourceNotFoundException;
 import com.example.myblogsite.repository.UserRepository;
 import com.example.myblogsite.service.UserService;
 import org.modelmapper.ModelMapper;

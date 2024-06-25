@@ -1,14 +1,11 @@
 package com.example.myblogsite.controller;
 
-import com.example.myblogsite.entity.Post;
 import com.example.myblogsite.pojo.PostPojo;
 import com.example.myblogsite.service.PostService;
 import com.example.myblogsite.shared.pojo.ApiResponse;
 import com.example.myblogsite.shared.pojo.PostResponse;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,8 +52,10 @@ public class PostController {
     @GetMapping("/postsInPage")
     public ResponseEntity<PostResponse> getAllPostsInPage(
             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-            @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize) {
-        PostResponse postResponse = this.postService.getPostsInPage(pageNumber,pageSize);
+            @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize,
+            @RequestParam (value = "sortBy",defaultValue = "postId",required = false) String sortBy,
+            @RequestParam (value = "sortDir",defaultValue = "asc",required = false) String sortDir) {
+        PostResponse postResponse = this.postService.getPostsInPage(pageNumber,pageSize,sortBy,sortDir);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
 
     }
@@ -77,6 +76,12 @@ public class PostController {
     public ApiResponse deletePost(@PathVariable Long postId) {
         this.postService.deletePost(postId);
         return new ApiResponse("Post deleted successfully",true);
+    }
+
+    @GetMapping("/posts/search/{keyword}")
+    public ResponseEntity<List<PostPojo>> getPostByKeyword(@PathVariable String keyword) {
+        List<PostPojo> result = this.postService.searchPosts(keyword);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
