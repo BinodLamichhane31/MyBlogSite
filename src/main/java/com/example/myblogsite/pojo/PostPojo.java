@@ -1,10 +1,13 @@
 package com.example.myblogsite.pojo;
 
 import com.example.myblogsite.entity.Category;
+import com.example.myblogsite.entity.Comment;
 import com.example.myblogsite.entity.User;
 import lombok.*;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,6 +21,7 @@ public class PostPojo {
     private Date createdDate;
     private UserPojo user;
     private CategoryPojo category;
+    private Set<CommentPojo> comments = new HashSet<>();
 
 
 }
