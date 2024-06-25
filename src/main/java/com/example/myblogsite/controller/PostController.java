@@ -1,5 +1,6 @@
 package com.example.myblogsite.controller;
 
+import com.example.myblogsite.config.AppConstants;
 import com.example.myblogsite.pojo.PostPojo;
 import com.example.myblogsite.service.PostService;
 import com.example.myblogsite.shared.pojo.ApiResponse;
@@ -29,17 +30,21 @@ public class PostController {
 
     @GetMapping("/user/{userId}/posts")
     public ResponseEntity<PostResponse> getPostsByUser(@PathVariable Long userId,
-                                                         @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-                                                         @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize) {
-        PostResponse postResponse = this.postService.getPostsByUser(userId,pageNumber,pageSize);
+                                                         @RequestParam(value = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+                                                         @RequestParam (value = "pageSize", defaultValue = AppConstants.PAGE_SIZE,required = false) Integer pageSize,
+                                                            @RequestParam (value = "sortBy",defaultValue = AppConstants.SORT_BY,required = false) String sortBy,
+                                                       @RequestParam (value = "sortDir",defaultValue = AppConstants.SORT_DIR,required = false) String sortDir) {
+        PostResponse postResponse = this.postService.getPostsByUser(userId,pageNumber,pageSize,sortBy,sortDir);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
     @GetMapping("/category/{categoryId}/posts")
     public ResponseEntity<PostResponse> getPostsByCategory(@PathVariable Long categoryId,
-                                                             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-                                                             @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize) {
-        PostResponse postResponse = this.postService.getPostsByCategory(categoryId, pageNumber, pageSize);
+                                                             @RequestParam(value = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+                                                             @RequestParam (value = "pageSize", defaultValue = AppConstants.PAGE_SIZE,required = false) Integer pageSize,
+                                                           @RequestParam (value = "sortBy",defaultValue = AppConstants.SORT_BY,required = false) String sortBy,
+                                                           @RequestParam (value = "sortDir",defaultValue = AppConstants.SORT_DIR,required = false) String sortDir) {
+        PostResponse postResponse = this.postService.getPostsByCategory(categoryId, pageNumber, pageSize,sortBy,sortDir);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
@@ -51,10 +56,10 @@ public class PostController {
 
     @GetMapping("/postsInPage")
     public ResponseEntity<PostResponse> getAllPostsInPage(
-            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-            @RequestParam (value = "pageSize", defaultValue = "10",required = false) Integer pageSize,
-            @RequestParam (value = "sortBy",defaultValue = "postId",required = false) String sortBy,
-            @RequestParam (value = "sortDir",defaultValue = "asc",required = false) String sortDir) {
+            @RequestParam(value = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+            @RequestParam (value = "pageSize", defaultValue = AppConstants.PAGE_SIZE,required = false) Integer pageSize,
+            @RequestParam (value = "sortBy",defaultValue = AppConstants.SORT_BY,required = false) String sortBy,
+            @RequestParam (value = "sortDir",defaultValue = AppConstants.SORT_DIR,required = false) String sortDir) {
         PostResponse postResponse = this.postService.getPostsInPage(pageNumber,pageSize,sortBy,sortDir);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
 

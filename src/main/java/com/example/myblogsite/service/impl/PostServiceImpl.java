@@ -86,10 +86,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse getPostsByCategory(Long categoryId,Integer pageNum, Integer pageSize) {
+    public PostResponse getPostsByCategory(Long categoryId,Integer pageNum, Integer pageSize,String sortBy,String sortDirection) {
         Category category = this.categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new ResourceNotFoundException("Category ", "category id ", categoryId));
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Sort sort = (sortDirection.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize,sort);
         Page<Post> postsPage = this.postRepository.findByCategory(category,pageable);
         List<Post> posts= postsPage.getContent();
         List<PostPojo> postPojos= posts.stream().map((post) -> this.modelMapper.map(post, PostPojo.class)).collect(Collectors.toList());
@@ -97,10 +98,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse getPostsByUser(Long userId,Integer pageNum, Integer pageSize) {
+    public PostResponse getPostsByUser(Long userId,Integer pageNum, Integer pageSize,String sortBy,String sortDirection) {
         User user = this.userRepository.findById(userId)
                 .orElseThrow(()->new ResourceNotFoundException("User","user id",userId));
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Sort sort = (sortDirection.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize,sort);
         Page<Post> postsPage = this.postRepository.findByUser(user,pageable);
         List<Post> posts= postsPage.getContent();
         List<PostPojo> postPojos= posts.stream().map((post) -> this.modelMapper.map(post, PostPojo.class)).collect(Collectors.toList());

@@ -14,8 +14,8 @@ public interface PostService {
     void deletePost(Long postId);
     PostPojo getPostById(Long postId);
     List<PostPojo> getAllPosts();
-    PostResponse getPostsByCategory(Long categoryId,Integer pageNum, Integer pageSize);
-    PostResponse getPostsByUser(Long userId,Integer pageNum, Integer pageSize);
+    PostResponse getPostsByCategory(Long categoryId,Integer pageNum, Integer pageSize,String sortBy,String sortDirection);
+    PostResponse getPostsByUser(Long userId,Integer pageNum, Integer pageSize,String sortBy,String sortDirection);
     List<PostPojo> searchPosts(String keyword);
     PostResponse getPostsInPage(Integer pageNum, Integer pageSize,String sortBy,String sortDirection);
 
