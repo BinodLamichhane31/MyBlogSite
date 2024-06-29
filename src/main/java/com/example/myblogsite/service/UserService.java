@@ -11,5 +11,6 @@ public interface UserService {
     List<UserPojo> getAllUsers();
     UserPojo updateUser(UserPojo userPojo,Long userId);
     void deleteUser(Long userId);
+    public void updatePasswords();
 
 }

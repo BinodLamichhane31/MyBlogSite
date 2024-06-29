@@ -7,6 +7,8 @@ import com.example.myblogsite.repository.UserRepository;
 import com.example.myblogsite.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +18,26 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
 
     @Autowired
     private ModelMapper modelMapper;
+
+    public void updatePasswords() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            String rawPassword = user.getPassword(); // assuming you have a way to get the raw password
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+            user.setPassword(encodedPassword);
+            userRepository.save(user);
+        }
+    }
     @Override
     public UserPojo createUser(UserPojo userPojo) {
         User user = this.userPojoToUser(userPojo);
