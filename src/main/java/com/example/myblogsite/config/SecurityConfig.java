@@ -38,7 +38,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    public static final String[] PUBLIC_URLS = {"/v1/auth/login"};
+    public static final String[] PUBLIC_URLS = {"/v1/auth/**"};
 
     @Autowired
     private CustomUserDetailService customUserDetailService;

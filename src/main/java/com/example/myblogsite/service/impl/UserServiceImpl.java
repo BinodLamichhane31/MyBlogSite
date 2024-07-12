@@ -1,8 +1,11 @@
 package com.example.myblogsite.service.impl;
 
+import com.example.myblogsite.config.AppConstants;
+import com.example.myblogsite.entity.Role;
 import com.example.myblogsite.entity.User;
 import com.example.myblogsite.exception.ResourceNotFoundException;
 import com.example.myblogsite.pojo.UserPojo;
+import com.example.myblogsite.repository.RoleRepository;
 import com.example.myblogsite.repository.UserRepository;
 import com.example.myblogsite.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -18,31 +21,31 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+    private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public void updatePasswords() {
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            String rawPassword = user.getPassword(); // assuming you have a way to get the raw password
-            String encodedPassword = passwordEncoder.encode(rawPassword);
-            user.setPassword(encodedPassword);
-            userRepository.save(user);
-        }
-    }
+
     @Override
     public UserPojo createUser(UserPojo userPojo) {
         User user = this.userPojoToUser(userPojo);
         User savedUser = this.userRepository.save(user);
         return this.userToUserPojo(savedUser);
+    }
+
+    @Override
+    public UserPojo registerUser(UserPojo userPojo) {
+       User user = this.modelMapper.map(userPojo, User.class);
+       user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+       Role role = this.roleRepository.findById(AppConstants.NORMAL_USER).get();
+       user.getRoles().add(role);
+       User savedUser = this.userRepository.save(user);
+        return this.modelMapper.map(savedUser, UserPojo.class);
     }
 
     @Override

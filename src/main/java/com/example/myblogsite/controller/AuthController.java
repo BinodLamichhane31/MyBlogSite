@@ -1,6 +1,7 @@
 package com.example.myblogsite.controller;
 
 import com.example.myblogsite.entity.User;
+import com.example.myblogsite.pojo.UserPojo;
 import com.example.myblogsite.security.JwtTokenHelper;
 import com.example.myblogsite.service.UserService;
 import com.example.myblogsite.shared.pojo.JwtAuthRequest;
@@ -26,6 +27,9 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserService userService;
+
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createJwtToken(@RequestBody JwtAuthRequest authRequest) throws Exception {
@@ -44,5 +48,11 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             throw new Exception("Invalid username or password", e);
         }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserPojo> registerUser(@RequestBody UserPojo userPojo){
+        UserPojo registeredUser = this.userService.registerUser(userPojo);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 }
