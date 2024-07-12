@@ -22,7 +22,7 @@ public class UserPojo {
      private Long id;
 
      @NotEmpty
-     @Size(min = 6, max = 30,message = "Username must be minimum of 4 characters and maximum of 30 characters.")
+     @Size(min = 4, max = 30,message = "Username must be minimum of 4 characters and maximum of 30 characters.")
      private String name;
      @Email(message = "Email address is not valid.")
      private String email;

@@ -6,6 +6,7 @@ import com.example.myblogsite.security.JwtTokenHelper;
 import com.example.myblogsite.service.UserService;
 import com.example.myblogsite.shared.pojo.JwtAuthRequest;
 import com.example.myblogsite.shared.pojo.JwtAuthResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/auth")
+@CrossOrigin("*")
 public class AuthController {
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
@@ -51,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserPojo> registerUser(@RequestBody UserPojo userPojo){
+    public ResponseEntity<UserPojo> registerUser(@Valid @RequestBody UserPojo userPojo){
         UserPojo registeredUser = this.userService.registerUser(userPojo);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
