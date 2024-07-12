@@ -1,8 +1,16 @@
 package com.example.myblogsite.shared.pojo;
 
+import com.example.myblogsite.entity.User;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+
 public class JwtAuthResponse {
     private String token;
 }

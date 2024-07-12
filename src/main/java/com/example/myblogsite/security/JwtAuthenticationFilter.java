@@ -37,11 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             token = requestTokenHeader.substring(7);
-            logger.info("Received JWT Token: {}"+ token);
-
-
             try {
-                username = jwtTokenHelper.getUsernameFromToken(token);
+                username = this.jwtTokenHelper.getUsernameFromToken(token);
             } catch (IllegalArgumentException e) {
                 logger.error("Unable to get JWT Token", e);
             } catch (ExpiredJwtException e) {
@@ -56,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             if (jwtTokenHelper.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken =
@@ -65,9 +62,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             } else {
                 logger.error("JWT Token is not valid");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT Token is not valid");
+                return;
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return request.getRequestURI().equals("/v1/auth/login");
     }
 }

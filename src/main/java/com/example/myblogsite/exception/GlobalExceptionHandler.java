@@ -3,6 +3,7 @@ package com.example.myblogsite.exception;
 import com.example.myblogsite.shared.pojo.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse> resourceNotFoundExceptionHandler(ResourceNotFoundException e) {
@@ -39,5 +41,15 @@ public class GlobalExceptionHandler {
         String message = ex.getMessage();
         ApiResponse apiResponse = new ApiResponse(message, true);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+        return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleAllExceptions(Exception ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
