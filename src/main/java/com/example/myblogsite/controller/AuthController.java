@@ -7,6 +7,7 @@ import com.example.myblogsite.service.UserService;
 import com.example.myblogsite.shared.pojo.JwtAuthRequest;
 import com.example.myblogsite.shared.pojo.JwtAuthResponse;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ModelMapper mapper;
+
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createJwtToken(@RequestBody JwtAuthRequest authRequest) throws Exception {
@@ -40,6 +44,7 @@ public class AuthController {
             String token = this.jwtTokenHelper.generateToken(userDetails);
             JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
             jwtAuthResponse.setToken(token);
+            jwtAuthResponse.setUser(this.mapper.map((User) userDetails, UserPojo.class));
             return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
 
     }
