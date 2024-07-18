@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,5 +16,5 @@ public class CommentPojo {
     private Long id;
     private String content;
     private String userName;
-    private LocalDateTime date;
+    private Date date;
 }

@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -36,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
         Post post = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "post id", postId));
         Comment comment = this.modelMapper.map(commentPojo, Comment.class);
         comment.setPost(post);
-        comment.setDate(LocalDateTime.now());
+        comment.setDate(new Date());
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
 
