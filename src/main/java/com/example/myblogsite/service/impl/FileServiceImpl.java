@@ -32,4 +32,18 @@ public class FileServiceImpl implements FileService {
         InputStream is = new FileInputStream(fullPath);
         return is;
     }
+
+    @Override
+    public void deleteImage(String path, String fileName) throws IOException {
+        String filePath = path + File.separator + fileName;
+        File file = new File(filePath);
+        if (file.exists()) {
+            if (!file.delete()) {
+                throw new IOException("Failed to delete the file: " + filePath);
+            }
+        }
+    }
+
+
+
 }

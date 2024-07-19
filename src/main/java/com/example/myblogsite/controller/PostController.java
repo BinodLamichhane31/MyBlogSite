@@ -92,9 +92,14 @@ public class PostController {
     }
 
     @DeleteMapping("/posts/{postId}")
-    public ApiResponse deletePost(@PathVariable Long postId) {
+    public ApiResponse deletePost(@PathVariable Long postId) throws IOException {
+        PostPojo post = this.postService.getPostById(postId);
+
+        if (post != null && post.getImageName() != null) {
+            this.fileService.deleteImage(path, post.getImageName());
+        }
         this.postService.deletePost(postId);
-        return new ApiResponse("Post deleted successfully",true);
+        return new ApiResponse("Post deleted successfully", true);
     }
 
     @GetMapping("/posts/search/{keyword}")
@@ -121,6 +126,7 @@ public class PostController {
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());
     }
+
 
 
 
