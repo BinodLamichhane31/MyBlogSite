@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService {
         post.setTitle(postPojo.getTitle());
         post.setContent(postPojo.getContent());
         post.setImageName(postPojo.getImageName());
-//        post.setCategory(this.categoryRepository.findById(postPojo.getCategory().getCategoryId()).get());
+        post.setCategory(this.categoryRepository.findById(postPojo.getCategory().getCategoryId()).get());
         return this.modelMapper.map(postRepository.save(post),PostPojo.class);
     }
 
