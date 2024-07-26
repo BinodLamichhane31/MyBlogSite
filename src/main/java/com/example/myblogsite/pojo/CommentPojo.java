@@ -17,4 +17,6 @@ public class CommentPojo {
     private String content;
     private String userName;
     private Date date;
+    private String email;
+
 }

@@ -73,11 +73,12 @@ public class PostController {
             @RequestParam(value = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
             @RequestParam (value = "pageSize", defaultValue = AppConstants.PAGE_SIZE,required = false) Integer pageSize,
             @RequestParam (value = "sortBy",defaultValue = AppConstants.SORT_BY,required = false) String sortBy,
-            @RequestParam (value = "sortDir",defaultValue = AppConstants.SORT_DIR,required = false) String sortDir) {
-        PostResponse postResponse = this.postService.getPostsInPage(pageNumber,pageSize,sortBy,sortDir);
+            @RequestParam (value = "sortDir",defaultValue = AppConstants.SORT_DIR,required = false) String sortDir,
+            @RequestParam (value = "query", required = false) String query) {
+        PostResponse postResponse = this.postService.getPostsInPage(pageNumber, pageSize, sortBy, sortDir, query);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
-
     }
+
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostPojo> getPostById(@PathVariable Long postId) {

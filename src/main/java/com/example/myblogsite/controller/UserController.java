@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,16 +40,26 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserPojo> updateUser(@Valid @RequestBody UserPojo userPojo,@PathVariable Long userId){
-        UserPojo updatedUserPojo = this.userService.updateUser(userPojo,userId);
+    public ResponseEntity<UserPojo> updateUser(@Valid @RequestBody UserPojo userPojo, @PathVariable Long userId){
+        System.out.println("Received payload for update: " + userPojo.getAbout()+ userPojo.getEmail());
+        UserPojo updatedUserPojo = this.userService.updateUser(userPojo, userId);
         return ResponseEntity.ok(updatedUserPojo);
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userID}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userID){
         this.userService.deleteUser(userID);
         return new ResponseEntity<>(new ApiResponse("User deleted successfully.",true),HttpStatus.OK);
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
+        boolean exists = userService.doesEmailExist(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
     }
 
 }

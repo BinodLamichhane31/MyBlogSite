@@ -22,6 +22,7 @@ public class Comment {
     private Long id;
     @Column(length = 10000)
     private String content;
+    private Long email;
     private String userName;
     private Date date;
 

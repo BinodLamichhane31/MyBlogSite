@@ -24,8 +24,14 @@ public class CommentController {
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long commentId) {
-        this.commentService.deleteComment(commentId);
-        return new ResponseEntity<>(new ApiResponse("Comment deleted successfully",true), HttpStatus.OK);
+        commentService.deleteComment(commentId);
+        return new ResponseEntity<>(new ApiResponse("Comment deleted successfully", true), HttpStatus.OK);
+    }
 
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<CommentPojo> updateComment(@PathVariable Long commentId,
+                                                     @RequestBody CommentPojo commentPojo) {
+        CommentPojo updatedComment = commentService.updateComment(commentId, commentPojo);
+        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
 }

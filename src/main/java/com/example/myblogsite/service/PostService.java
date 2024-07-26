@@ -17,6 +17,6 @@ public interface PostService {
     PostResponse getPostsByCategory(Long categoryId,Integer pageNum, Integer pageSize,String sortBy,String sortDirection);
     PostResponse getPostsByUser(Long userId,Integer pageNum, Integer pageSize,String sortBy,String sortDirection);
     List<PostPojo> searchPosts(String keyword);
-    PostResponse getPostsInPage(Integer pageNum, Integer pageSize,String sortBy,String sortDirection);
+    PostResponse getPostsInPage(Integer pageNum, Integer pageSize, String sortBy, String sortDirection, String query);
 
 }

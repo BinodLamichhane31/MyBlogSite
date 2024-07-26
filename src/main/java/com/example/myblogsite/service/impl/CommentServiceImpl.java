@@ -41,23 +41,39 @@ public class CommentServiceImpl implements CommentService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
 
-        // Retrieve the full user information using email
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", 0));
-
-        // Map User entity to UserPojo
         UserPojo userPojo = this.modelMapper.map(user, UserPojo.class);
-
-        // Set the user's name in the comment
         comment.setUserName(userPojo.getName());
+        comment.setEmail(userPojo.getEmail());
         Comment savedComment = this.commentRepository.save(comment);
         return this.modelMapper.map(savedComment, CommentPojo.class);
     }
 
     @Override
     public void deleteComment(Long commentId) {
-        Comment comment = this.commentRepository.findById(commentId).orElseThrow(()-> new ResourceNotFoundException("Comment", "comment id", commentId));
-        this.commentRepository.delete(comment);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "comment id", commentId));
+//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String email = userDetails.getUsername();
+//        if (!comment.getUserName().equals(email)) {
+//            throw new RuntimeException("You can delete only your comments");
+//        }
+        commentRepository.delete(comment);
+    }
 
+    @Override
+    public CommentPojo updateComment(Long commentId, CommentPojo commentPojo) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "comment id", commentId));
+//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String email = userDetails.getUsername();
+//        if (!comment.getUserName().equals(email)) {
+//            throw new RuntimeException("You can edit only your comments");
+//        }
+        comment.setContent(commentPojo.getContent());
+        comment.setDate(new Date());
+        Comment updatedComment = commentRepository.save(comment);
+        return modelMapper.map(updatedComment, CommentPojo.class);
     }
 }

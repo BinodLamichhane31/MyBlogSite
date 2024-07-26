@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -62,4 +61,31 @@ public class AuthController {
         UserPojo registeredUser = this.userService.registerUser(userPojo);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
+
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<JwtAuthResponse> refreshToken(@RequestBody String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            String username = jwtTokenHelper.getUsernameFromToken(token);
+            if (jwtTokenHelper.isTokenExpired(token)) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String newToken = jwtTokenHelper.generateToken(userDetails);
+
+            JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+            jwtAuthResponse.setToken(newToken);
+            jwtAuthResponse.setUser(this.mapper.map((User) userDetails, UserPojo.class));
+
+            return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
 }

@@ -12,5 +12,7 @@ public interface UserService {
     List<UserPojo> getAllUsers();
     UserPojo updateUser(UserPojo userPojo,Long userId);
     void deleteUser(Long userId);
+    boolean doesEmailExist(String email);
+
 
 }

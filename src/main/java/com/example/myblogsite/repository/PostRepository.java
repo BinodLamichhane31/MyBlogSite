@@ -17,4 +17,6 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     @Query(value = "SELECT * FROM posts WHERE LOWER(title) LIKE LOWER(CONCAT('%', :keyword, '%'))",nativeQuery = true)
     List<Post> findByTitleContaining(@Param("keyword") String keyword);
+    Page<Post> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
+
 }

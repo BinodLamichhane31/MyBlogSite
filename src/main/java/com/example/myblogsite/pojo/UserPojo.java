@@ -30,7 +30,7 @@ public class UserPojo {
      @Email(message = "Email address is not valid.")
      private String email;
 
-     @NotEmpty
+//     @NotEmpty
      @Size(min = 6, max = 12,message = "Password must be of min of 6 characters and max of 12 characters.")
      private String password;
      @NotEmpty

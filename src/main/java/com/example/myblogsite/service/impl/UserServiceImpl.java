@@ -69,11 +69,11 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userPojo.getName());
         user.setEmail(userPojo.getEmail());
-        user.setPassword(userPojo.getPassword());
         user.setAbout(userPojo.getAbout());
-
+        if (userPojo.getPassword() != null && !userPojo.getPassword().isEmpty()) {
+            user.setPassword(this.passwordEncoder.encode(userPojo.getPassword()));
+        }
         User updatedUser = this.userRepository.save(user);
-
         return this.userToUserPojo(updatedUser);
     }
 
@@ -82,6 +82,11 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("User","id",userId));
         this.userRepository.delete(user);
+    }
+
+    @Override
+    public boolean doesEmailExist(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public User userPojoToUser(UserPojo userPojo) {
